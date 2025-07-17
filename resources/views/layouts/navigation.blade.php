@@ -25,7 +25,7 @@
             <a href="{{ route('dashboard') }}" class="nav-link block{{ request()->routeIs('dashboard') ? ' active' : '' }}">🏠 Dashboard</a>
             <a href="{{ route('bookings.index') }}" class="nav-link block{{ request()->routeIs('bookings.index') ? ' active' : '' }}">📁 My Bookings</a>
             <a href="{{ route('bookings.create') }}" class="nav-link block{{ request()->routeIs('bookings.create') ? ' active' : '' }}">➕ New Booking</a>
-            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50" style="font-family: 'Inter', sans-serif;">Profile</a>
+           
         </nav>
 
         {{-- User Dropdown --}}
