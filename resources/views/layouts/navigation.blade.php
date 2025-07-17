@@ -1,108 +1,86 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-blue-200 shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
-            <!-- Logo/Brand -->
-            <div class="flex items-center">
-                <a href="{{ route('dashboard') }}" class="text-xl font-bold text-blue-600 tracking-tight" style="font-family: 'Inter', sans-serif;">Booking System</a>
-            </div>
-            <!-- Desktop Navigation Links -->
-            <div class="hidden md:flex space-x-8">
-                <a href="{{ route('dashboard') }}" class="nav-link{{ request()->routeIs('dashboard') ? ' active' : '' }}">Dashboard</a>
-                <a href="{{ route('bookings.index') }}" class="nav-link{{ request()->routeIs('bookings.index') ? ' active' : '' }}">My Bookings</a>
-                <a href="{{ route('bookings.create') }}" class="nav-link{{ request()->routeIs('bookings.create') ? ' active' : '' }}">New Booking</a>
-            </div>
-            <!-- User Dropdown -->
-            <div class="relative ml-4">
-                <button id="userMenuButton" class="flex items-center focus:outline-none group" aria-haspopup="true" aria-expanded="false">
-                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-600 text-white font-semibold text-lg" style="font-family: 'Inter', sans-serif;">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                    </span>
-                    <span class="ml-2 text-blue-800 text-sm font-medium hidden sm:inline" style="font-family: 'Inter', sans-serif;">{{ Auth::user()->name }}</span>
-                    <svg class="ml-1 w-4 h-4 text-gray-400 group-hover:text-blue-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                <div id="userDropdown" class="hidden absolute right-0 mt-2 w-44 bg-white border border-blue-100 rounded-lg shadow-lg py-1 z-50">
-                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50" style="font-family: 'Inter', sans-serif;">Profile</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-blue-50" style="font-family: 'Inter', sans-serif;">Logout</button>
-                    </form>
-                </div>
-            </div>
-            <!-- Mobile Hamburger -->
-            <div class="md:hidden flex items-center ml-2">
-                <button id="mobileMenuButton" class="p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+<div x-data="{ sidebarOpen: false }" class="flex min-h-screen bg-blue-50">
+
+    {{-- Mobile Toggle Button --}}
+    <div class="md:hidden fixed top-0 left-0 z-50 w-full bg-white border-b border-blue-200 shadow-sm flex items-center justify-between px-4 h-16">
+        <a href="{{ route('dashboard') }}" class="text-xl font-bold text-blue-600 tracking-tight" style="font-family: 'Inter', sans-serif;">
+            Booking System
+        </a>
+        <button @click="sidebarOpen = !sidebarOpen" class="text-blue-600 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
     </div>
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-blue-100">
-        <div class="px-4 pt-2 pb-4 space-y-1">
-            <a href="{{ route('dashboard') }}" class="nav-link block w-full{{ request()->routeIs('dashboard') ? ' active' : '' }}">Dashboard</a>
-            <a href="{{ route('bookings.index') }}" class="nav-link block w-full{{ request()->routeIs('bookings.index') ? ' active' : '' }}">My Bookings</a>
-            <a href="{{ route('bookings.create') }}" class="nav-link block w-full{{ request()->routeIs('bookings.create') ? ' active' : '' }}">New Booking</a>
-            <div class="border-t border-blue-100 my-2"></div>
+
+    {{-- Sidebar --}}
+    <aside :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}" class="fixed z-40 md:static inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-200 ease-in-out w-64 bg-white border-r border-blue-200 shadow-lg flex flex-col">
+        <div class="h-16 hidden md:flex items-center justify-center border-b border-blue-100">
+            <a href="{{ route('dashboard') }}" class="text-2xl font-bold text-blue-600 tracking-tight" style="font-family: 'Inter', sans-serif;">
+                Booking System
+            </a>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-1 mt-16 md:mt-0">
+            <a href="{{ route('dashboard') }}" class="nav-link block{{ request()->routeIs('dashboard') ? ' active' : '' }}">🏠 Dashboard</a>
+            <a href="{{ route('bookings.index') }}" class="nav-link block{{ request()->routeIs('bookings.index') ? ' active' : '' }}">📁 My Bookings</a>
+            <a href="{{ route('bookings.create') }}" class="nav-link block{{ request()->routeIs('bookings.create') ? ' active' : '' }}">➕ New Booking</a>
             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50" style="font-family: 'Inter', sans-serif;">Profile</a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-blue-50" style="font-family: 'Inter', sans-serif;">Logout</button>
-            </form>
+        </nav>
+
+        {{-- User Dropdown --}}
+        <div x-data="{ open: false }" class="relative px-4 py-3 border-t border-blue-100">
+            <button @click="open = !open" class="w-full flex items-center justify-between text-left">
+                <div class="flex items-center space-x-2">
+                    <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg font-semibold">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                    <span class="text-blue-800 font-medium">{{ Auth::user()->name }}</span>
+                </div>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+
+            <div x-show="open" @click.away="open = false"
+                 class="mt-2 bg-white border border-blue-100 rounded-lg shadow-lg absolute left-4 right-4 z-10 py-1">
+                <a href="{{ route('profile.edit') }}"
+                   class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50"
+                   style="font-family: 'Inter', sans-serif;">Profile</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                            class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-blue-50"
+                            style="font-family: 'Inter', sans-serif;">Logout</button>
+                </form>
+            </div>
         </div>
-    </div>
+    </aside>
 
-    <style>
-        .nav-link {
-            position: relative;
-            color: #64748b; /* slate-500 */
-            text-decoration: none;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            padding-bottom: 2px;
-            transition: color 0.2s;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: #2563eb; /* blue-600 */
-        }
-        .nav-link.active::after, .nav-link:hover::after {
-            content: '';
-            display: block;
-            margin: 0 auto;
-            width: 80%;
-            border-bottom: 2px solid #2563eb;
-            border-radius: 1px;
-            margin-top: 2px;
-        }
-    </style>
+    {{-- Main Content --}}
+    <main class="flex-1 p-6 md:ml-64 mt-16 md:mt-0">
+        {{ $slot }}
+    </main>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const userMenuButton = document.getElementById('userMenuButton');
-            const userDropdown = document.getElementById('userDropdown');
-            const mobileMenuButton = document.getElementById('mobileMenuButton');
-            const mobileMenu = document.getElementById('mobileMenu');
+{{-- Alpine.js --}}
+<script src="//unpkg.com/alpinejs" defer></script>
 
-            if (userMenuButton && userDropdown) {
-                userMenuButton.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('hidden');
-                });
-                document.addEventListener('click', function (e) {
-                    if (!userDropdown.contains(e.target) && !userMenuButton.contains(e.target)) {
-                        userDropdown.classList.add('hidden');
-                    }
-                });
-            }
+{{-- Styling --}}
+<style>
+    .nav-link {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        color: #475569;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        transition: background 0.2s, color 0.2s;
+    }
 
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', function () {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-        });
-    </script>
-</nav>
+    .nav-link:hover,
+    .nav-link.active {
+        background-color: #e0f2fe;
+        color: #1d4ed8;
+        font-weight: 600;
+    }
+</style>
